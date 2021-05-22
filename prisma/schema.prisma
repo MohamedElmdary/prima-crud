@@ -1,0 +1,37 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id    Int     @default(autoincrement()) @id
+  username  String
+  email String  @unique
+  phone String @unique
+  password String
+  createAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  todos Todo[]
+}
+
+model Todo {
+  id Int @default(autoincrement()) @id
+  title String
+  description String?
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  tasks Task[]
+}
+
+model Task {
+  id Int @default(autoincrement()) @id
+  details String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  todoId Int
+  todo Todo @relation(fields: [todoId], references: [id])
+}
